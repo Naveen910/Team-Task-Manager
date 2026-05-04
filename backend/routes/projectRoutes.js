@@ -1,7 +1,7 @@
 const router = require("express").Router();
 
-const auth = require("../middleware/AuthMiddleware");
-const { isAdmin } = require("../middleware/RoleMiddleware");
+const auth = require("../middleware/authMiddleware");
+const { isAdmin } = require("../middleware/roleMiddleware");
 
 const {
   createProject,

@@ -1,3 +1,4 @@
+// backend/server.js
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
@@ -11,8 +12,9 @@ const taskRoutes = require("./routes/taskRoutes");
 const app = express();
 
 app.use(cors({
-  origin: "http://localhost:5175",
-  methods: ["GET", "POST", "PATCH", "DELETE"],
+  origin: ["http://localhost:5173", "http://localhost:5175"],
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
@@ -26,4 +28,4 @@ app.use("/api/tasks", taskRoutes);
 
 app.get("/", (req, res) => res.send("API running"));
 
-app.listen(5000, () => console.log("Server started"));
+app.listen(5000, () => console.log("✅ Server running on port 5000"));
