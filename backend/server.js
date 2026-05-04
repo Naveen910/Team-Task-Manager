@@ -11,24 +11,21 @@ const taskRoutes = require("./routes/taskRoutes");
 
 const app = express();
 
-// CORS
 app.use(cors({
-  origin: "http://localhost:5173",
+  origin: ["http://localhost:5173", "http://localhost:5175"],
   credentials: true,
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-  optionsSuccessStatus: 200
+  allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
 app.use(express.json());
+
+connectDB();
 
 app.use("/api/auth", authRoutes);
 app.use("/api/projects", projectRoutes);
 app.use("/api/tasks", taskRoutes);
 
-app.get("/", (req, res) => res.send("✅ Task Manager API Running"));
+app.get("/", (req, res) => res.send("API running"));
 
-const PORT = 5001;   
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
-});
+app.listen(5001, () => console.log("✅ Server running on port 5001"));
