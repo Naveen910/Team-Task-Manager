@@ -1,9 +1,26 @@
-const router = require("express").Router();
-const auth = require("../middleware/authMiddleware");
-const { isAdmin } = require("../middleware/roleMiddleware");
-const { createProject, getProjects } = require("../controllers/projectController");
+const Project = require("../models/Project");
 
-router.post("/", auth, isAdmin, createProject);
-router.get("/", auth, getProjects);
+exports.createProject = async (req, res) => {
+  try {
+    const project = await Project.create({
+      ...req.body,
+      createdBy: req.user.id
+    });
 
-module.exports = router;
+    res.json(project);
+  } catch (err) {
+    res.status(500).json({ msg: err.message });
+  }
+};
+
+exports.getProjects = async (req, res) => {
+  try {
+    const projects = await Project.find({
+      members: req.user.id
+    });
+
+    res.json(projects);
+  } catch (err) {
+    res.status(500).json({ msg: err.message });
+  }
+};

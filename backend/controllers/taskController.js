@@ -1,9 +1,34 @@
-const router = require("express").Router();
-const auth = require("../middleware/authMiddleware");
-const { createTask, updateTask, getTasks } = require("../controllers/taskController");
+const Task = require("../models/Task");
 
-router.post("/", auth, createTask);
-router.patch("/:id", auth, updateTask);
-router.get("/", auth, getTasks);
+exports.createTask = async (req, res) => {
+  try {
+    const task = await Task.create(req.body);
+    res.json(task);
+  } catch (err) {
+    res.status(500).json({ msg: err.message });
+  }
+};
 
-module.exports = router;
+exports.updateTask = async (req, res) => {
+  try {
+    const task = await Task.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
+    res.json(task);
+  } catch (err) {
+    res.status(500).json({ msg: err.message });
+  }
+};
+
+exports.getTasks = async (req, res) => {
+  try {
+    const tasks = await Task.find({
+      assignedTo: req.user.id
+    });
+    res.json(tasks);
+  } catch (err) {
+    res.status(500).json({ msg: err.message });
+  }
+};

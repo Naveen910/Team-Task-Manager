@@ -1,6 +1,11 @@
 const router = require("express").Router();
 const auth = require("../middleware/authMiddleware");
-const { createTask, updateTask, getTasks } = require("../controllers/taskController");
+
+const {
+  createTask,
+  updateTask,
+  getTasks
+} = require("../controllers/taskController");
 
 router.post("/", auth, createTask);
 router.patch("/:id", auth, updateTask);
