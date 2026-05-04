@@ -12,7 +12,7 @@ API.interceptors.request.use((req) => {
   const token = localStorage.getItem("token");
   
   if (token && !req.url.includes("/auth")) {
-    req.headers.Authorization = token;   // Note: No "Bearer " prefix (your backend expects raw token)
+    req.headers.Authorization = token;   
   }
 
   return req;
