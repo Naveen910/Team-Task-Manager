@@ -38,11 +38,17 @@ export default function Navbar() {
             Projects
           </Link>
 
+            <Link to="/tasks" className={isActive("/tasks")}>
+              Tasks
+            </Link>
+
           {user?.role === "Admin" && (
             <Link to="/admin" className={isActive("/admin") }>
               Admin
             </Link>
           )}
+
+          
         </div>
       </div>
 
