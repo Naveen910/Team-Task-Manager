@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   preview: {
     allowedHosts: [
-      "zoological-smile-production-9470.up.railway.app"
+      "zoological-smile-production-42a9.up.railway.app"
     ]
   }
 });
