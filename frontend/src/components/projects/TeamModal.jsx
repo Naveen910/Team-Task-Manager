@@ -53,78 +53,114 @@ export default function TeamModal({ project, close, refresh }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
-      <div className="bg-white p-6 rounded-xl w-[420px] max-h-[80vh] overflow-y-auto">
-        <h2 className="text-lg font-bold mb-4">
-          Team - {project.name}
-        </h2>
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex justify-center items-center z-50">
+      
+      {/* Modal */}
+      <div className="bg-white w-[450px] max-h-[85vh] rounded-2xl shadow-xl flex flex-col">
 
-        {/* Loading */}
-        {loading ? (
-          <p className="text-gray-500">Loading members...</p>
-        ) : (
-          <>
-            {/* Current Members */}
-            <div className="mb-4">
-              <h3 className="font-medium mb-2">Current Members</h3>
+        {/* Header */}
+        <div className="flex justify-between items-center p-5 border-b">
+          <div>
+            <h2 className="text-lg font-semibold text-gray-800">
+              Team Members
+            </h2>
+            <p className="text-sm text-gray-500">
+              {project.name}
+            </p>
+          </div>
 
-              {members.length === 0 && (
-                <p className="text-sm text-gray-400">No members</p>
-              )}
+          <button
+            onClick={close}
+            className="text-gray-400 hover:text-gray-600 text-lg"
+          >
+            ✕
+          </button>
+        </div>
 
-              {members.map((m) => (
-                <div
-                  key={m._id}
-                  className="flex justify-between items-center border-b py-2"
-                >
-                  <div>
-                    <p className="text-sm font-medium">{m.name}</p>
-                    <p className="text-xs text-gray-500">
-                      {m.email} • {m.role}
-                    </p>
+        {/* Body */}
+        <div className="p-5 overflow-y-auto flex-1">
+
+          {/* Loading */}
+          {loading ? (
+            <p className="text-gray-500 text-center">
+              Loading members...
+            </p>
+          ) : (
+            <>
+              {/* Current Members */}
+              <div className="mb-6">
+                <h3 className="text-sm font-semibold text-gray-700 mb-3">
+                  Current Members
+                </h3>
+
+                {members.length === 0 ? (
+                  <p className="text-sm text-gray-400">
+                    No members in this project
+                  </p>
+                ) : (
+                  <div className="space-y-3">
+                    {members.map((m) => (
+                      <div
+                        key={m._id}
+                        className="flex justify-between items-center bg-gray-50 px-3 py-2 rounded-lg"
+                      >
+                        <div>
+                          <p className="text-sm font-medium text-gray-800">
+                            {m.name}
+                          </p>
+                          <p className="text-xs text-gray-500">
+                            {m.email} • {m.role}
+                          </p>
+                        </div>
+
+                        {user?.role === "Admin" && (
+                          <button
+                            onClick={() => handleRemove(m._id)}
+                            className="text-red-500 text-xs hover:underline"
+                          >
+                            Remove
+                          </button>
+                        )}
+                      </div>
+                    ))}
                   </div>
+                )}
+              </div>
 
-                  {user?.role === "Admin" && (
-                    <button
-                      onClick={() => handleRemove(m._id)}
-                      className="text-red-500 text-xs"
-                    >
-                      Remove
-                    </button>
-                  )}
-                </div>
-              ))}
-            </div>
-
-            {/* Add Members (Admin only) */}
-            {user?.role === "Admin" && (
-              <>
-                <div className="mb-3">
-                  <h3 className="font-medium mb-2">Add Members</h3>
+              {/* Add Members */}
+              {user?.role === "Admin" && (
+                <div>
+                  <h3 className="text-sm font-semibold text-gray-700 mb-2">
+                    Add Members
+                  </h3>
 
                   <MemberSelector
                     selected={selected}
                     setSelected={setSelected}
                   />
+
+                  <button
+                    onClick={handleAddMembers}
+                    disabled={selected.length === 0}
+                    className="mt-3 w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg transition disabled:opacity-50"
+                  >
+                    Add Selected Members
+                  </button>
                 </div>
+              )}
+            </>
+          )}
+        </div>
 
-                <button
-                  onClick={handleAddMembers}
-                  className="bg-green-600 text-white px-3 py-2 rounded w-full"
-                >
-                  Add Selected Members
-                </button>
-              </>
-            )}
-          </>
-        )}
-
-        <button
-          onClick={close}
-          className="mt-4 w-full bg-gray-800 text-white py-2 rounded"
-        >
-          Close
-        </button>
+        {/* Footer */}
+        <div className="p-4 border-t">
+          <button
+            onClick={close}
+            className="w-full bg-gray-900 hover:bg-black text-white py-2 rounded-lg transition"
+          >
+            Close
+          </button>
+        </div>
       </div>
     </div>
   );
