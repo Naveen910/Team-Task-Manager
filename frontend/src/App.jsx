@@ -1,5 +1,5 @@
 // App.jsx
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "./context/AuthContext";
 
 // Pages
@@ -8,24 +8,35 @@ import Signup from "./pages/Signup";
 import ProjectsPage from "./pages/ProjectsPage";
 import Dashboard from "./pages/Dashboard";
 import AdminPage from "./pages/AdminPage";
+import TasksPage from "./pages/TasksPage";
 
-// Layout (optional but recommended)
+// Layout
 import Navbar from "./components/layout/Navbar";
 
-// 🔐 Protected Route
-function PrivateRoute({ children }) {
-  const { user } = useAuth();
-  return user ? children : <Navigate to="/" />;
+/* ---------- Layout Wrapper ---------- */
+function Layout() {
+  return (
+    <>
+      <Navbar />
+      <Outlet />
+    </>
+  );
 }
 
-// 👑 Admin Route
-function AdminRoute({ children }) {
+/* ---------- Protected Route ---------- */
+function PrivateRoute() {
+  const { user } = useAuth();
+  return user ? <Layout /> : <Navigate to="/" />;
+}
+
+/* ---------- Admin Route ---------- */
+function AdminRoute() {
   const { user } = useAuth();
 
   if (!user) return <Navigate to="/" />;
   if (user.role !== "Admin") return <Navigate to="/dashboard" />;
 
-  return children;
+  return <Layout />;
 }
 
 export default function App() {
@@ -33,47 +44,21 @@ export default function App() {
     <Router>
       <Routes>
 
-        {/* Public Routes */}
+        {/* Public */}
         <Route path="/" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
 
-        {/* Protected Routes with Layout */}
-        <Route
-          path="/dashboard"
-          element={
-            <PrivateRoute>
-              <>
-                <Navbar />
-                <Dashboard />
-              </>
-            </PrivateRoute>
-          }
-        />
-
-        <Route
-          path="/projects"
-          element={
-            <PrivateRoute>
-              <>
-                <Navbar />
-                <ProjectsPage />
-              </>
-            </PrivateRoute>
-          }
-        />
+        {/* Protected Layout Routes */}
+        <Route element={<PrivateRoute />}>
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/projects" element={<ProjectsPage />} />
+          <Route path="/tasks" element={<TasksPage />} />
+        </Route>
 
         {/* Admin Only */}
-        <Route
-          path="/admin"
-          element={
-            <AdminRoute>
-              <>
-                <Navbar />
-                <AdminPage />
-              </>
-            </AdminRoute>
-          }
-        />
+        <Route element={<AdminRoute />}>
+          <Route path="/admin" element={<AdminPage />} />
+        </Route>
 
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/" />} />
