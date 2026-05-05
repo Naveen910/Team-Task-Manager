@@ -19,47 +19,34 @@ function MemberSelector({ selected = [], setSelected }) {
       setSelected([...selected, id]);
     }
   };
+return (
+  <div
+    className="border border-gray-200 rounded-xl max-h-48 min-h-[160px] overflow-hidden bg-gray-50"
+  >
+    {loading && (
+      <p className="text-sm text-gray-500 p-3 text-center">Loading users...</p>
+    )}
 
-  return (
-    <div
-      className="border rounded-xl max-h-48 min-h-[160px] overflow-y-scroll bg-gray-50"
-    >
-      
-      {/* Loading */}
-      {loading && (
-        <p className="text-sm text-gray-500 p-3 text-center">
-          Loading users...
-        </p>
-      )}
+    {!loading && users.length === 0 && (
+      <p className="text-sm text-gray-400 p-3 text-center">No users found</p>
+    )}
 
-      {/* Empty */}
-      {!loading && users.length === 0 && (
-        <p className="text-sm text-gray-400 p-3 text-center">
-          No users found
-        </p>
-      )}
-
-      {/* Users */}
-      {!loading && users.length > 0 && (
+    {!loading && users.length > 0 && (
+      <div className="max-h-48 overflow-y-auto custom-scroll-inner" 
+           style={{ scrollbarGutter: 'stable both-edges' }}>
         <div className="divide-y">
           {users.map((u) => {
             const isSelected = selected.includes(u._id);
-
             return (
               <div
                 key={u._id}
                 onClick={() => toggle(u._id)}
-                className={`flex justify-between items-center px-3 py-2 cursor-pointer transition rounded-md
-                  ${isSelected ? "bg-blue-50" : "hover:bg-gray-100"}
-                `}
+                className={`flex justify-between items-center px-4 py-2.5 cursor-pointer transition-colors
+                  ${isSelected ? 'bg-blue-50' : 'hover:bg-white'}`}
               >
                 <div>
-                  <p className="text-sm font-medium text-gray-800">
-                    {u.name}
-                  </p>
-                  <p className="text-xs text-gray-500">
-                    {u.role}
-                  </p>
+                  <p className="text-sm font-medium text-gray-800">{u.name}</p>
+                  <p className="text-xs text-gray-500">{u.role}</p>
                 </div>
 
                 <input
@@ -67,15 +54,17 @@ function MemberSelector({ selected = [], setSelected }) {
                   checked={isSelected}
                   onChange={() => toggle(u._id)}
                   onClick={(e) => e.stopPropagation()}
-                  className="w-4 h-4 accent-blue-600 cursor-pointer"
+                  className="w-4 h-4 accent-blue-600"
                 />
               </div>
             );
           })}
         </div>
-      )}
-    </div>
-  );
+      </div>
+    )}
+  </div>
+);
+
 }
 
 export default memo(MemberSelector);
