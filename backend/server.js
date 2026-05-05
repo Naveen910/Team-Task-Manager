@@ -16,7 +16,7 @@ const app = express();
 app.use(cors({
   origin: [
     "http://localhost:5173", 
-    "zoological-smile-production-42a9.up.railway.app" 
+    "https://zoological-smile-production-42a9.up.railway.app" 
   ],
   credentials: true
 }));
