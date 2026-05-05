@@ -13,8 +13,8 @@ A full-stack web application to manage projects, assign tasks, and track progres
 ## 🔐 Test Credentials
 ### 👑 Admin Access
 
-Email: admin@gmail.com
-Password: admin
+* Email: admin@gmail.com
+* Password: admin
 
 ## 📂 GitHub Repository
 
@@ -37,6 +37,7 @@ Password: admin
   * Create projects
   * Add/remove team members
   * Assign tasks
+
 * **Member**
 
   * View assigned projects
@@ -113,24 +114,6 @@ Password: admin
 
 ---
 
-## 🔐 Environment Variables
-
-### Backend (.env)
-
-```
-MONGO_URI=your_mongodb_connection_string
-JWT_SECRET=your_secret_key
-PORT=5001
-```
-
-### Frontend (.env)
-
-```
-VITE_API_URL=https://team-task-manager-production-a9aa.up.railway.app/api
-```
-
----
-
 ## 🧪 How to Run Locally
 
 ### Backend
@@ -148,12 +131,6 @@ cd frontend
 npm install
 npm run dev
 ```
-
----
-
-## 📸 Demo Video
-
-👉 (Add your video link here)
 
 ---
 
