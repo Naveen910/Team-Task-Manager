@@ -13,7 +13,7 @@ const userRoutes = require("./routes/userRoutes");
 const app = express();
 
 app.use(cors({
-  origin: ["team-task-manager-production-a9aa.up.railway.app"],
+  origin: ["zoological-smile.railway.internal"],
   credentials: true,
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"]
