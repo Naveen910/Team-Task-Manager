@@ -13,12 +13,8 @@ A full-stack web application to manage projects, assign tasks, and track progres
 ## 🔐 Test Credentials
 ### 👑 Admin Access
 
-Email: admin@gmail.com
-Password: admin
-
-## 📂 GitHub Repository
-
-👉 https://github.com/Naveen910/Team-Task-Manager
+* Email: admin@gmail.com
+* Password: admin
 
 ---
 
@@ -37,6 +33,7 @@ Password: admin
   * Create projects
   * Add/remove team members
   * Assign tasks
+  
 * **Member**
 
   * View assigned projects
@@ -68,92 +65,9 @@ Password: admin
 
 ---
 
-## 🛠️ Tech Stack
-
-### Frontend
-
-* React (Vite)
-* Tailwind CSS
-* React Router
-* Axios
-
-### Backend
-
-* Node.js
-* Express.js
-* MongoDB (Mongoose)
-* JWT Authentication
-
 ### Deployment
 
 * Railway (Frontend + Backend + Database)
-
----
-
-## ⚙️ API Overview
-
-### Auth
-
-* `POST /api/auth/signup`
-* `POST /api/auth/login`
-
-### Projects
-
-* `GET /api/projects`
-* `POST /api/projects`
-* `POST /api/projects/:id/members`
-* `DELETE /api/projects/:id/members/:userId`
-
-### Tasks
-
-* `GET /api/tasks`
-* `POST /api/tasks`
-* `PATCH /api/tasks/:id`
-* `GET /api/tasks/project/:projectId`
-
----
-
-## 🔐 Environment Variables
-
-### Backend (.env)
-
-```
-MONGO_URI=your_mongodb_connection_string
-JWT_SECRET=your_secret_key
-PORT=5001
-```
-
-### Frontend (.env)
-
-```
-VITE_API_URL=https://team-task-manager-production-a9aa.up.railway.app/api
-```
-
----
-
-## 🧪 How to Run Locally
-
-### Backend
-
-```
-cd backend
-npm install
-npm run dev
-```
-
-### Frontend
-
-```
-cd frontend
-npm install
-npm run dev
-```
-
----
-
-## 📸 Demo Video
-
-👉 (Add your video link here)
 
 ---
 

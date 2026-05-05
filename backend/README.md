@@ -1,24 +1,41 @@
-Base URL:
-http://localhost:5001/api
+### Backend
 
-Auth
-POST /api/auth/signup
-POST /api/auth/login
+- Node.js
+- Express.js
+- MongoDB (Mongoose)
+- JWT Authentication
 
-Projects
-POST /api/projects — create project
-GET /api/projects — get all projects for the logged-in user
-GET /api/projects/:id — get one project by ID
+---
 
-Tasks
-POST /api/tasks — create task
-PATCH /api/tasks/:id — update task
-GET /api/tasks — get all tasks for the logged-in user
-GET /api/tasks/project/:projectId — get tasks for a specific project
+## 🧪 How to Run Locally
 
-Users
-GET /api/users — get all users
-GET /api/users/project/:projectId — get members of a project
+### Backend
 
-Health/root
-GET / — returns API running
+```
+cd backend
+npm install
+npm run dev
+```
+
+---
+
+## ⚙️ API Overview
+
+### Auth
+
+- `POST /api/auth/signup`
+- `POST /api/auth/login`
+
+### Projects
+
+- `GET /api/projects`
+- `POST /api/projects`
+- `POST /api/projects/:id/members`
+- `DELETE /api/projects/:id/members/:userId`
+
+### Tasks
+
+- `GET /api/tasks`
+- `POST /api/tasks`
+- `PATCH /api/tasks/:id`
+- `GET /api/tasks/project/:projectId`
