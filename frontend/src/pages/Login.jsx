@@ -17,7 +17,12 @@ export default function Login() {
       const res = await API.post("/auth/login", form);
 
       localStorage.setItem("token", res.data.token);
-      localStorage.setItem("user", JSON.stringify(res.data.user));
+// ✅ Only store if exists
+if (res.data.user) {
+  localStorage.setItem("user", JSON.stringify(res.data.user));
+} else {
+  console.error("User missing in response");
+}
 
       navigate("/dashboard");
     } catch (err) {
