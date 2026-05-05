@@ -1,8 +1,8 @@
 // components/projects/MemberSelector.jsx
-import { useEffect, useState } from "react";
+import { useEffect, useState, memo } from "react";
 import API from "../../services/api";
 
-export default function MemberSelector({ selected, setSelected }) {
+function MemberSelector({ selected = [], setSelected }) {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -21,8 +21,10 @@ export default function MemberSelector({ selected, setSelected }) {
   };
 
   return (
-    <div className="border rounded-xl max-h-48 overflow-y-auto bg-gray-50">
-
+    <div
+      className="border rounded-xl max-h-48 min-h-[160px] overflow-y-scroll bg-gray-50"
+    >
+      
       {/* Loading */}
       {loading && (
         <p className="text-sm text-gray-500 p-3 text-center">
@@ -47,7 +49,7 @@ export default function MemberSelector({ selected, setSelected }) {
               <div
                 key={u._id}
                 onClick={() => toggle(u._id)}
-                className={`flex justify-between items-center px-3 py-2 cursor-pointer transition
+                className={`flex justify-between items-center px-3 py-2 cursor-pointer transition rounded-md
                   ${isSelected ? "bg-blue-50" : "hover:bg-gray-100"}
                 `}
               >
@@ -60,13 +62,12 @@ export default function MemberSelector({ selected, setSelected }) {
                   </p>
                 </div>
 
-                {/* Checkbox */}
                 <input
                   type="checkbox"
                   checked={isSelected}
                   onChange={() => toggle(u._id)}
-                  onClick={(e) => e.stopPropagation()} // prevent double toggle
-                  className="w-4 h-4 accent-blue-600"
+                  onClick={(e) => e.stopPropagation()}
+                  className="w-4 h-4 accent-blue-600 cursor-pointer"
                 />
               </div>
             );
@@ -76,3 +77,5 @@ export default function MemberSelector({ selected, setSelected }) {
     </div>
   );
 }
+
+export default memo(MemberSelector);

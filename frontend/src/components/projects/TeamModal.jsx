@@ -8,7 +8,7 @@ export default function TeamModal({ project, close, refresh }) {
   const { user } = useAuth();
 
   const [members, setMembers] = useState([]);
-  const [selected, setSelected] = useState([]);
+  const [selected, setSelected] = useState([]); // ✅ always array
   const [loading, setLoading] = useState(true);
 
   const fetchMembers = async () => {
@@ -53,115 +53,117 @@ export default function TeamModal({ project, close, refresh }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex justify-center items-center z-50">
+  <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50 overflow-hidden">
+    
+    {/* Modal */}
+    <div className="bg-white w-[450px] max-h-[85vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden">
       
-      {/* Modal */}
-      <div className="bg-white w-[450px] max-h-[85vh] rounded-2xl shadow-xl flex flex-col">
-
-        {/* Header */}
-        <div className="flex justify-between items-center p-5 border-b">
-          <div>
-            <h2 className="text-lg font-semibold text-gray-800">
-              Team Members
-            </h2>
-            <p className="text-sm text-gray-500">
-              {project.name}
-            </p>
-          </div>
-
-          <button
-            onClick={close}
-            className="text-gray-400 hover:text-gray-600 text-lg"
-          >
-            ✕
-          </button>
+      {/* Header - Fixed height */}
+      <div className="flex justify-between items-center px-6 py-5 border-b border-gray-100 flex-shrink-0">
+        <div>
+          <h2 className="text-lg font-semibold text-gray-900">
+            Team Members
+          </h2>
+          <p className="text-sm text-gray-500 mt-0.5">
+            {project.name}
+          </p>
         </div>
 
-        {/* Body */}
-        <div className="p-5 overflow-y-auto flex-1">
+        <button
+          onClick={close}
+          className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors"
+        >
+          ✕
+        </button>
+      </div>
 
-          {/* Loading */}
-          {loading ? (
-            <p className="text-gray-500 text-center">
-              Loading members...
-            </p>
-          ) : (
-            <>
-              {/* Current Members */}
-              <div className="mb-6">
-                <h3 className="text-sm font-semibold text-gray-700 mb-3">
-                  Current Members
-                </h3>
+      {/* Scrollable Body */}
+      <div 
+        className="flex-1 p-6 overflow-y-auto custom-scroll"
+        style={{ 
+          scrollbarGutter: 'stable both-edges',
+          contain: 'content' 
+        }}
+      >
+        {loading ? (
+          <div className="flex items-center justify-center h-40">
+            <p className="text-gray-500">Loading members...</p>
+          </div>
+        ) : (
+          <>
+            {/* Current Members */}
+            <div className="mb-8">
+              <h3 className="text-sm font-semibold text-gray-700 mb-4">
+                Current Members
+              </h3>
 
-                {members.length === 0 ? (
-                  <p className="text-sm text-gray-400">
-                    No members in this project
-                  </p>
-                ) : (
-                  <div className="space-y-3">
-                    {members.map((m) => (
-                      <div
-                        key={m._id}
-                        className="flex justify-between items-center bg-gray-50 px-3 py-2 rounded-lg"
-                      >
-                        <div>
-                          <p className="text-sm font-medium text-gray-800">
-                            {m.name}
-                          </p>
-                          <p className="text-xs text-gray-500">
-                            {m.email} • {m.role}
-                          </p>
-                        </div>
-
-                        {user?.role === "Admin" && (
-                          <button
-                            onClick={() => handleRemove(m._id)}
-                            className="text-red-500 text-xs hover:underline"
-                          >
-                            Remove
-                          </button>
-                        )}
+              {members.length === 0 ? (
+                <p className="text-sm text-gray-400 py-8 text-center">
+                  No members in this project
+                </p>
+              ) : (
+                <div className="space-y-3">
+                  {members.map((m) => (
+                    <div
+                      key={m._id}
+                      className="flex justify-between items-center bg-gray-50 hover:bg-gray-100 px-4 py-3 rounded-xl transition-colors duration-150"
+                    >
+                      <div>
+                        <p className="font-medium text-gray-800">{m.name}</p>
+                        <p className="text-xs text-gray-500">
+                          {m.email} • {m.role}
+                        </p>
                       </div>
-                    ))}
-                  </div>
-                )}
-              </div>
 
-              {/* Add Members */}
-              {user?.role === "Admin" && (
-                <div>
-                  <h3 className="text-sm font-semibold text-gray-700 mb-2">
-                    Add Members
-                  </h3>
-
-                  <MemberSelector
-                    selected={selected}
-                    setSelected={setSelected}
-                  />
-
-                  <button
-                    onClick={handleAddMembers}
-                    disabled={selected.length === 0}
-                    className="mt-3 w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg transition disabled:opacity-50"
-                  >
-                    Add Selected Members
-                  </button>
+                      {user?.role === "Admin" && (
+                        <button
+                          onClick={() => handleRemove(m._id)}
+                          className="text-red-500 hover:text-red-600 text-sm font-medium px-3 py-1 hover:bg-red-50 rounded-lg transition-colors"
+                        >
+                          Remove
+                        </button>
+                      )}
+                    </div>
+                  ))}
                 </div>
               )}
-            </>
-          )}
-        </div>
+            </div>
 
-        {/* Footer */}
-        <div className="p-4 border-t">
-          <button
-            onClick={close}
-            className="w-full bg-gray-900 hover:bg-black text-white py-2 rounded-lg transition"
-          >
-            Close
-          </button>
-        </div>
+            {/* Add Members Section */}
+            {user?.role === "Admin" && (
+              <div>
+                <h3 className="text-sm font-semibold text-gray-700 mb-3">
+                  Add Members
+                </h3>
+
+                <MemberSelector
+                  selected={selected}
+                  setSelected={setSelected}
+                />
+
+                <button
+                  onClick={handleAddMembers}
+                  disabled={selected.length === 0}
+                  className="mt-4 w-full bg-green-600 hover:bg-green-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white py-3 rounded-xl font-medium transition-colors"
+                >
+                  Add Selected Members
+                </button>
+              </div>
+            )}
+          </>
+        )}
+      </div>
+
+      {/* Footer - Fixed height */}
+      <div className="px-6 py-4 border-t border-gray-100 flex-shrink-0">
+        <button
+          onClick={close}
+          className="w-full bg-gray-900 hover:bg-black text-white py-3 rounded-xl font-medium transition-colors"
+        >
+          Close
+        </button>
       </div>
     </div>
-  );
+  </div>
+);
 }
