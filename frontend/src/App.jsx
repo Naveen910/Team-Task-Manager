@@ -1,40 +1,84 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { AuthProvider, useAuth } from "./context/AuthContext";
-import { Toaster } from "react-hot-toast";
+// App.jsx
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { useAuth } from "./context/AuthContext";
 
+// Pages
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import ProjectsPage from "./pages/ProjectsPage";
 import Dashboard from "./pages/Dashboard";
-import Projects from "./pages/Projects";
-import ProjectDetail from "./pages/ProjectDetail";
+import AdminPage from "./pages/AdminPage";
 
-function ProtectedRoute({ children }) {
+// Layout (optional but recommended)
+import Navbar from "./components/layout/Navbar";
+
+// 🔐 Protected Route
+function PrivateRoute({ children }) {
   const { user } = useAuth();
   return user ? children : <Navigate to="/" />;
 }
 
-function App() {
-  return (
-    <AuthProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          
-          <Route path="/dashboard" element={
-            <ProtectedRoute><Dashboard /></ProtectedRoute>
-          } />
-          <Route path="/projects" element={
-            <ProtectedRoute><Projects /></ProtectedRoute>
-          } />
-          <Route path="/projects/:id" element={
-            <ProtectedRoute><ProjectDetail /></ProtectedRoute>
-          } />
-        </Routes>
-        <Toaster position="top-right" />
-      </BrowserRouter>
-    </AuthProvider>
-  );
+// 👑 Admin Route
+function AdminRoute({ children }) {
+  const { user } = useAuth();
+
+  if (!user) return <Navigate to="/" />;
+  if (user.role !== "Admin") return <Navigate to="/dashboard" />;
+
+  return children;
 }
 
-export default App;
+export default function App() {
+  return (
+    <Router>
+      <Routes>
+
+        {/* Public Routes */}
+        <Route path="/" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+
+        {/* Protected Routes with Layout */}
+        <Route
+          path="/dashboard"
+          element={
+            <PrivateRoute>
+              <>
+                <Navbar />
+                <Dashboard />
+              </>
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/projects"
+          element={
+            <PrivateRoute>
+              <>
+                <Navbar />
+                <ProjectsPage />
+              </>
+            </PrivateRoute>
+          }
+        />
+
+        {/* Admin Only */}
+        <Route
+          path="/admin"
+          element={
+            <AdminRoute>
+              <>
+                <Navbar />
+                <AdminPage />
+              </>
+            </AdminRoute>
+          }
+        />
+
+        {/* Fallback */}
+        <Route path="*" element={<Navigate to="/" />} />
+
+      </Routes>
+    </Router>
+  );
+}

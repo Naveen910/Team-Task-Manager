@@ -1,70 +1,81 @@
+// pages/Dashboard.jsx
 import { useEffect, useState } from "react";
 import API from "../services/api";
-import { Calendar, CheckCircle, Clock, AlertTriangle } from 'lucide-react';
-import StatCard from "../components/StatCard";
 
 export default function Dashboard() {
-  const [stats, setStats] = useState({
-    total: 0,
-    completed: 0,
-    pending: 0,
-    overdue: 0
-  });
-  const [recentTasks, setRecentTasks] = useState([]);
+  const [tasks, setTasks] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchDashboardData();
-  }, []);
-
-  const fetchDashboardData = async () => {
+  const fetchTasks = async () => {
     try {
       const res = await API.get("/tasks");
-      const tasks = res.data;
-
-      const completed = tasks.filter(t => t.status === "Done").length;
-      const overdue = tasks.filter(t => 
-        t.dueDate && new Date(t.dueDate) < new Date() && t.status !== "Done"
-      ).length;
-
-      setStats({
-        total: tasks.length,
-        completed,
-        pending: tasks.length - completed,
-        overdue
-      });
-
-      setRecentTasks(tasks.slice(0, 5));
+      setTasks(res.data);
     } catch (err) {
       console.error(err);
+    } finally {
+      setLoading(false);
     }
   };
 
+  useEffect(() => {
+    fetchTasks();
+  }, []);
+
+  const total = tasks.length;
+  const completed = tasks.filter(t => t.status === "Done").length;
+  const inProgress = tasks.filter(t => t.status === "In Progress").length;
+  const overdue = tasks.filter(
+    t => new Date(t.dueDate) < new Date() && t.status !== "Done"
+  ).length;
+
   return (
-    <div className="p-8">
-      <h1 className="text-3xl font-bold mb-8">Dashboard</h1>
+    <div className="p-6">
+      <h1 className="text-2xl font-bold mb-6">Dashboard</h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-        <StatCard icon={Clock} label="Total Tasks" value={stats.total} color="blue" />
-        <StatCard icon={CheckCircle} label="Completed" value={stats.completed} color="green" />
-        <StatCard icon={AlertTriangle} label="Overdue" value={stats.overdue} color="red" />
-        <StatCard icon={Calendar} label="Pending" value={stats.pending} color="orange" />
-      </div>
-
-      <h2 className="text-xl font-semibold mb-4">Recent Tasks</h2>
-      <div className="bg-white rounded-xl shadow-sm border">
-        {recentTasks.map(task => (
-          <div key={task._id} className="p-4 border-b last:border-0 flex justify-between items-center hover:bg-gray-50">
-            <div>
-              <p className="font-medium">{task.title}</p>
-              <p className="text-sm text-gray-500">{task.projectId?.name}</p>
-            </div>
-            <div className={`px-3 py-1 rounded-full text-sm font-medium
-              ${task.status === "Done" ? "bg-green-100 text-green-700" : "bg-yellow-100 text-yellow-700"}`}>
-              {task.status}
-            </div>
+      {loading ? (
+        <p>Loading...</p>
+      ) : (
+        <>
+          {/* Stats */}
+          <div className="grid grid-cols-4 gap-4 mb-6">
+            <Card title="Total Tasks" value={total} />
+            <Card title="Completed" value={completed} />
+            <Card title="In Progress" value={inProgress} />
+            <Card title="Overdue" value={overdue} />
           </div>
-        ))}
-      </div>
+
+          {/* Recent Tasks */}
+          <div>
+            <h2 className="text-lg font-semibold mb-3">Recent Tasks</h2>
+
+            {tasks.slice(0, 5).map(task => (
+              <div
+                key={task._id}
+                className="border p-3 rounded mb-2 flex justify-between"
+              >
+                <span>{task.title}</span>
+                <span className="text-sm text-gray-500">
+                  {task.status}
+                </span>
+              </div>
+            ))}
+
+            {tasks.length === 0 && (
+              <p className="text-gray-500">No tasks found</p>
+            )}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
+// Reusable stat card
+function Card({ title, value }) {
+  return (
+    <div className="bg-white shadow rounded p-4 text-center">
+      <p className="text-gray-500 text-sm">{title}</p>
+      <h2 className="text-xl font-bold">{value}</h2>
     </div>
   );
 }

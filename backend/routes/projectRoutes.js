@@ -3,13 +3,12 @@ const auth = require("../middleware/authMiddleware");
 const { isAdmin } = require("../middleware/roleMiddleware");
 
 const {
-  createProject,
-  getProjects,
-  getProjectById,
+  addMembers,
+  removeMember
 } = require("../controllers/projectController");
 
-router.post("/", auth, createProject);
-router.get("/", auth, getProjects);
-router.get("/:id", auth, getProjectById);
+// add/remove members
+router.post("/:id/members", auth, isAdmin, addMembers);
+router.delete("/:id/members/:userId", auth, isAdmin, removeMember);
 
 module.exports = router;
