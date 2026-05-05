@@ -1,13 +1,3 @@
-## 🧪 How to Run Locally
-
-```
-cd frontend
-npm install
-npm run dev
-```
-
----
-
 ## 🛠️ Tech Stack
 
 ### Frontend
@@ -16,3 +6,13 @@ npm run dev
 - Tailwind CSS
 - React Router
 - Axios
+
+---
+
+## 🧪 How to Run Locally
+
+```
+cd frontend
+npm install
+npm run dev
+```
