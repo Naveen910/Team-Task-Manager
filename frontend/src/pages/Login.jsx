@@ -1,3 +1,4 @@
+// pages/Login.jsx
 import { useState } from "react";
 import API from "../services/api";
 import { useNavigate } from "react-router-dom";
@@ -9,17 +10,18 @@ export default function Login() {
   const navigate = useNavigate();
 
   const handleLogin = async () => {
-    setLoading(true);
-    setError("");
-
     try {
+      setLoading(true);
+      setError("");
+
       const res = await API.post("/auth/login", form);
-      
+
       localStorage.setItem("token", res.data.token);
       navigate("/dashboard");
     } catch (err) {
-      console.error(err); // Helpful for debugging
-      const message = err.response?.data?.msg || "Login failed. Please try again.";
+      console.error(err);
+      const message =
+        err.response?.data?.msg || "Login failed. Please try again.";
       setError(message);
     } finally {
       setLoading(false);
@@ -27,38 +29,63 @@ export default function Login() {
   };
 
   return (
-    <div style={{ maxWidth: "400px", margin: "50px auto", padding: "20px" }}>
-      <h2>Login</h2>
-      
-      {error && <p style={{ color: "red" }}>{error}</p>}
+    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <div className="bg-white shadow-lg rounded-xl p-8 w-[360px]">
 
-      <input
-        type="email"
-        placeholder="Email"
-        value={form.email}
-        onChange={(e) => setForm({ ...form, email: e.target.value })}
-        style={{ display: "block", margin: "10px 0", width: "100%", padding: "10px" }}
-      />
-      
-      <input
-        type="password"
-        placeholder="Password"
-        value={form.password}
-        onChange={(e) => setForm({ ...form, password: e.target.value })}
-        style={{ display: "block", margin: "10px 0", width: "100%", padding: "10px" }}
-      />
+        {/* Title */}
+        <h2 className="text-2xl font-bold text-center mb-6">
+          Welcome Back
+        </h2>
 
-      <button 
-        onClick={handleLogin} 
-        disabled={loading}
-        style={{ padding: "10px 20px", marginTop: "10px" }}
-      >
-        {loading ? "Logging in..." : "Login"}
-      </button>
+        {/* Error */}
+        {error && (
+          <p className="text-red-500 text-sm mb-3 text-center">
+            {error}
+          </p>
+        )}
 
-      <p style={{ marginTop: "15px" }}>
-        Don't have an account? <a href="/signup">Sign up</a>
-      </p>
+        {/* Email */}
+        <input
+          type="email"
+          placeholder="Email"
+          value={form.email}
+          onChange={(e) =>
+            setForm({ ...form, email: e.target.value })
+          }
+          className="w-full border rounded-lg px-3 py-2 mb-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+
+        {/* Password */}
+        <input
+          type="password"
+          placeholder="Password"
+          value={form.password}
+          onChange={(e) =>
+            setForm({ ...form, password: e.target.value })
+          }
+          className="w-full border rounded-lg px-3 py-2 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+
+        {/* Button */}
+        <button
+          onClick={handleLogin}
+          disabled={loading}
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg transition disabled:opacity-50"
+        >
+          {loading ? "Logging in..." : "Login"}
+        </button>
+
+        {/* Footer */}
+        <p className="text-sm text-center mt-4 text-gray-500">
+          Don’t have an account?{" "}
+          <span
+            className="text-blue-600 cursor-pointer"
+            onClick={() => navigate("/signup")}
+          >
+            Sign up
+          </span>
+        </p>
+      </div>
     </div>
   );
 }
