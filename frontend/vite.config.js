@@ -4,9 +4,11 @@ import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  server: {
+    host: true
+  },
   preview: {
-    allowedHosts: [
-      "zoological-smile-production-42a9.up.railway.app"
-    ]
+    host: true,
+    allowedHosts: [".railway.app"]
   }
 });
